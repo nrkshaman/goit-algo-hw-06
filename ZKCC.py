@@ -39,29 +39,51 @@ def dfs_iterative(graph, start_vertex):
             # Додаємо сусідні вершини до стеку
             stack.extend(reversed(list(graph[vertex])))  
 
+def dijkstra(graph:nx.Graph, start):
+    # Ініціалізація відстаней та множини невідвіданих вершин
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    unvisited = list(graph.nodes())
+
+    while unvisited:
+        # Знаходження вершини з найменшою відстанню серед невідвіданих
+        current_vertex = min(unvisited, key=lambda vertex: distances[vertex])
+
+        # Якщо поточна відстань є нескінченністю, то ми завершили роботу
+        if distances[current_vertex] == float('infinity'):
+            break
+
+        for neighbor, properties in graph[current_vertex].items():
+            distance = distances[current_vertex] + properties["distance"]
+            # Якщо нова відстань коротша, то оновлюємо найкоротший шлях
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+        # Видаляємо поточну вершину з множини невідвіданих
+        unvisited.remove(current_vertex)
+
+    return distances
 
 G = nx.Graph()
-G.add_edge("Acciaiuoli", "Medici")
-G.add_edge("Castellani", "Peruzzi")
-G.add_edge("Castellani", "Strozzi")
-G.add_edge("Castellani", "Barbadori")
-G.add_edge("Medici", "Barbadori")
-G.add_edge("Medici", "Ridolfi")
-G.add_edge("Medici", "Tornabuoni")
-G.add_edge("Medici", "Albizzi")
-G.add_edge("Medici", "Salviati")
-G.add_edge("Salviati", "Pazzi")
-G.add_edge("Peruzzi", "Strozzi")
-G.add_edge("Peruzzi", "Bischeri")
-G.add_edge("Strozzi", "Ridolfi")
-G.add_edge("Strozzi", "Bischeri")
-G.add_edge("Ridolfi", "Tornabuoni")
-G.add_edge("Tornabuoni", "Guadagni")
-G.add_edge("Albizzi", "Ginori")
-G.add_edge("Albizzi", "Guadagni")
-G.add_edge("Bischeri", "Guadagni")
-G.add_edge("Guadagni", "Lamberteschi")
-
+G.add_edge("Acciaiuoli", "Medici", distance=15)
+G.add_edge("Castellani", "Peruzzi", distance=9)
+G.add_edge("Castellani", "Strozzi", distance=2)
+G.add_edge("Castellani", "Barbadori", distance=6)
+G.add_edge("Medici", "Barbadori", distance=3)
+G.add_edge("Medici", "Ridolfi", distance=8)
+G.add_edge("Medici", "Tornabuoni", distance=13)
+G.add_edge("Medici", "Albizzi", distance=6)
+G.add_edge("Medici", "Salviati", distance=1)
+G.add_edge("Salviati", "Pazzi", distance=5)
+G.add_edge("Peruzzi", "Strozzi", distance=9)
+G.add_edge("Peruzzi", "Bischeri", distance=11)
+G.add_edge("Strozzi", "Ridolfi", distance=23)
+G.add_edge("Strozzi", "Bischeri", distance=8)
+G.add_edge("Ridolfi", "Tornabuoni", distance=7)
+G.add_edge("Tornabuoni", "Guadagni", distance=3)
+G.add_edge("Albizzi", "Ginori", distance=4)
+G.add_edge("Albizzi", "Guadagni", distance=11)
+G.add_edge("Bischeri", "Guadagni", distance=7)
+G.add_edge("Guadagni", "Lamberteschi", distance=1)
 
 # print(G.nodes())
 # print(G.edges())
@@ -85,6 +107,7 @@ print()
 print("dfs_iterative route:")
 dfs_iterative(G, 'Lamberteschi')
 print()
+print(dijkstra(G, 'Guadagni'))
 
 nx.draw(G, with_labels=True)
 plt.show()
