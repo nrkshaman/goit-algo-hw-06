@@ -1,3 +1,4 @@
+import time
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -83,6 +84,7 @@ print()
 # Виклик функції DFS
 print("dfs_iterative route:")
 dfs_iterative(G, 'Lamberteschi')
+print()
 
 nx.draw(G, with_labels=True)
 plt.show()
